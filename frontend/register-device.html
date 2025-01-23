@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Dispositivo</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header>
+    <h1>Registrar Nuevo Dispositivo</h1>
+</header>
+<main>
+    <form id="register-device-form">
+        <div class="form-group">
+            <label for="piso">Piso:</label>
+            <input type="text" id="piso" name="piso" required>
+        </div>
+        <div class="form-group">
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" name="fecha" required>
+        </div>
+        <div class="form-group">
+            <label for="nombre">Nombre del Equipo:</label>
+            <input type="text" id="nombre" name="nombre" required>
+        </div>
+        <div class="form-group">
+            <label for="contrasenaAdmin">Contraseña del Administrador:</label>
+            <input type="password" id="contrasenaAdmin" name="contrasenaAdmin" required>
+        </div>
+        <div class="form-group">
+            <label for="ubicacion">Ubicación:</label>
+            <input type="text" id="ubicacion" name="ubicacion" required>
+        </div>
+        <div class="form-group">
+            <label for="usuario">Usuario:</label>
+            <input type="text" id="usuario" name="usuario" required>
+        </div>
+        <div class="form-group">
+            <label for="usuarioDominio">Usuario de Dominio:</label>
+            <input type="text" id="usuarioDominio" name="usuarioDominio" required>
+        </div>
+        <div class="form-group">
+            <label for="tipo">Tipo:</label>
+            <select id="tipo" name="tipo" required>
+                <option value="Desktop">Desktop</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Tablet">Tablet</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="ipv4">IPv4:</label>
+            <input type="text" id="ipv4" name="ipv4" required>
+        </div>
+        <div class="form-group">
+            <label for="dominio">Dominio:</label>
+            <input type="text" id="dominio" name="dominio" required>
+        </div>
+        <div class="form-group">
+            <label for="numeroMac">Número MAC:</label>
+            <input type="text" id="numeroMac" name="numeroMac" required>
+        </div>
+        <div class="form-group">
+            <label for="marca">Marca:</label>
+            <input type="text" id="marca" name="marca" required>
+        </div>
+        <div class="form-group">
+            <label for="modelo">Modelo:</label>
+            <input type="text" id="modelo" name="modelo" required>
+        </div>
+        <div class="form-group">
+            <label for="serial">Serial:</label>
+            <input type="text" id="serial" name="serial" required>
+        </div>
+        <div class="form-group">
+            <label for="placa">Placa:</label>
+            <input type="text" id="placa" name="placa" required>
+        </div>
+        <div class="form-group">
+            <label for="procesador">Procesador:</label>
+            <input type="text" id="procesador" name="procesador" required>
+        </div>
+        <div class="form-group">
+            <label for="discoDuro">Disco Duro:</label>
+            <input type="text" id="discoDuro" name="discoDuro" required>
+        </div>
+        <div class="form-group">
+            <label for="memoriaRam">Memoria RAM:</label>
+            <input type="text" id="memoriaRam" name="memoriaRam" required>
+        </div>
+        <div class="form-group">
+            <label for="sistemaOperativo">Sistema Operativo:</label>
+            <input type="text" id="sistemaOperativo" name="sistemaOperativo" required>
+        </div>
+        <div class="form-group">
+            <label for="antivirus">Antivirus:</label>
+            <input type="text" id="antivirus" name="antivirus" required>
+        </div>
+        <div class="form-group">
+            <label for="softOfimatico">Software Ofimático:</label>
+            <input type="text" id="softOfimatico" name="softOfimatico" required>
+        </div>
+        <div class="form-group">
+            <label for="navegador">Navegador:</label>
+            <input type="text" id="navegador" name="navegador" required>
+        </div>
+        <div class="form-group">
+            <label for="observaciones">Observaciones:</label>
+            <textarea id="observaciones" name="observaciones" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="licencias">Licencias:</label>
+            <input type="text" id="licencias" name="licencias" required>
+        </div>
+        <button type="submit" class="btn">Registrar Dispositivo</button>
+    </form>
+</main>
+<script src="js/register-device.js"></script>
+</body>
+</html>

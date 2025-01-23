@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Inventario - Alcaldía de Duitama</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #008f39;
+            --secondary-color: #ce1126;
+            --background-color: #f8f9fa;
+            --text-color: #2b2d42;
+            --hover-color: #006e2c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, rgba(0, 143, 57, 0.1), rgba(206, 17, 38, 0.1));
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            width: 100%;
+            padding: 2rem;
+        }
+
+        .menu-button {
+            background: white;
+            border: none;
+            padding: 2rem;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+
+        .menu-button i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .menu-button:hover i {
+            transform: scale(1.1);
+        }
+
+        footer {
+            background: var(--text-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo img {
+            width: 80%;
+            height: auto;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .title {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 1.4rem;
+            }
+
+            .menu-button {
+                padding: 1.5rem;
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .menu-button:active {
+            animation: pulse 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Logo Alcaldía de Duitama">
+    </div>
+    <h1 class="title">Gestor de Inventario de Dispositivos Electrónicos</h1>
+    <h2 class="subtitle">Alcaldía de Duitama</h2>
+</header>
+
+<main>
+    <div class="menu">
+        <button class="menu-button" id="register-device">
+            <i class="fas fa-laptop-medical"></i>
+            Registrar Equipo
+        </button>
+        <button class="menu-button" id="search-device">
+            <i class="fas fa-search"></i>
+            Buscar Equipo
+        </button>
+        <button class="menu-button" id="scanners-printers">
+            <i class="fas fa-print"></i>
+            Scanners e Impresoras
+        </button>
+        <button class="menu-button" id="wifi-devices">
+            <i class="fas fa-wifi"></i>
+            Equipos WiFi
+        </button>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2025 Alcaldía de Duitama - Todos los derechos reservados</p>
+</footer>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

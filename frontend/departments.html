@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Departamentos</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Gestión de Departamentos</h1>
+    <form id="department-form">
+        <label for="department-name">Nombre del Departamento:</label>
+        <input type="text" id="department-name" name="department-name" required>
+
+        <label for="scanners">Número de Scanners:</label>
+        <input type="number" id="scanners" name="scanners" min="0" required>
+
+        <label for="printers">Número de Impresoras:</label>
+        <input type="number" id="printers" name="printers" min="0" required>
+
+        <button type="submit">Guardar</button>
+    </form>
+    <div id="department-list">
+        <h2>Departamentos Registrados</h2>
+        <!-- Los departamentos se llenarán dinámicamente -->
+    </div>
+</div>
+</body>
+</html>
