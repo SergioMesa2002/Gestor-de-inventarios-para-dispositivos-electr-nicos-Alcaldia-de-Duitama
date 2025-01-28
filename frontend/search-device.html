@@ -7,8 +7,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
+            --primary-color: #0a500e;
+            --secondary-color: #0c8b28;
             --success-color: #4CAF50;
             --background-color: #f8f9fa;
             --card-background: #ffffff;
@@ -18,14 +18,54 @@
             --transition: all 0.3s ease;
         }
 
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f6f8fd 0%, #f1f4f9 100%);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            color: var(--text-primary);
+            background: linear-gradient(
+                    135deg,
+                    rgba(0, 143, 57, 0.9) 0%,
+                    rgba(206, 17, 38, 0.8) 100%
+            ),
+            linear-gradient(
+                    45deg,
+                    rgba(0, 143, 57, 0.8) 0%,
+                    rgba(206, 17, 38, 0.9) 100%
+            );
+           
         }
+
+        .nav-links {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background: var(--gradient);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background: var(--gradient);
+            color: rgb(9, 29, 7);
+        }
+
+
 
         .container {
             width: 92%;
@@ -127,7 +167,7 @@
         .button:hover {
             background: var(--secondary-color);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+            box-shadow: 0 4px 12px rgba(9, 194, 80, 0.2);
         }
 
         .button i {
@@ -186,6 +226,25 @@
             display: none;
         }
 
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            left: 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+
         @media (max-width: 768px) {
             .container {
                 width: 95%;
@@ -208,6 +267,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
+
+<div class="nav-links">
+    <a href="dashboard.html" class="active">Principal</a>
+    <a href="register-device.html">Agregar Dispositivo</a>
+    <a href="wifi-devices.html">Dispositivos WiFi</a>
+    <a href="scanners-printers.html">Scanners e Impresoras</a>
+    <a href="search-device.html">Dispositivos Registrados</a>
+</div>
+
 <div class="container">
     <h1>Gestión de Dispositivos</h1>
 
@@ -378,7 +446,7 @@
                 const response = await fetch(`${apiUrl}/${device._id}/report`);
                 const report = await response.text();
 
-                const blob = new Blob([report], { type: "text/plain" });
+                const blob = new Blob([report], {type: "text/plain"});
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
@@ -392,7 +460,7 @@
         };
 
         document.getElementById("generatePdf").onclick = () => {
-            const { jsPDF } = window.jspdf;
+            const {jsPDF} = window.jspdf;
             const doc = new jsPDF();
 
             let y = 20;
@@ -410,6 +478,12 @@
             doc.save(`DeviceReport_${device._id}.pdf`);
         };
     }
+
+
+
 </script>
+<footer>
+    <p>Alcaldía de Duitama 2025</p>
+</footer>
 </body>
 </html>

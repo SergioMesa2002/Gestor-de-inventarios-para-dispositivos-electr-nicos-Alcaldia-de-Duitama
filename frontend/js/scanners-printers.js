@@ -41,10 +41,10 @@ async function fetchDepartments() {
         // Limpiar contenedor
         departmentsContainer.innerHTML = '';
 
-        // Crear cuadros para cada departamento
+        // Crear tarjetas para cada departamento
         departments.forEach((dept) => {
             const departmentCard = document.createElement('div');
-            departmentCard.className = 'department-card';
+            departmentCard.className = 'card';
             departmentCard.innerHTML = `
                 <h3>${dept.nombre}</h3>
                 <p>Impresoras: 
@@ -98,6 +98,7 @@ async function updateDepartment(id, numPrinters, numScanners) {
         alert('Hubo un error al intentar actualizar el departamento.');
     }
 }
+
 
 // Cargar departamentos al iniciar
 fetchDepartments();

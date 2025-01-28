@@ -11,6 +11,7 @@ const reportRoutes = require('./routes/reportRoutes');
 const userRoutes = require("./routes/userRoutes");
 const deviceRoutes = require("./routes/deviceRoutes");
 const departmentRoutes = require("./routes/departmentRoutes");
+const wifiRoutes = require("./routes/wifiRoutes");
 
 const app = express();
 
@@ -41,6 +42,8 @@ app.use("/api/users", userRoutes); // Rutas para gestión de usuarios
 app.use("/api/devices", deviceRoutes); // Rutas para gestión de dispositivos
 app.use("/api/departments", departmentRoutes); // Rutas para gestión de departamentos
 app.use('/api', reportRoutes);
+app.use("/api", wifiRoutes);
+
 // Ruta principal de prueba
 app.get("/", (req, res) => {
     res.send("¡Bienvenido a la API de Gestión de Inventarios!");

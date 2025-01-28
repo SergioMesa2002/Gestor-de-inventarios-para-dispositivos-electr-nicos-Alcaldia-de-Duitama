@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Equipos WiFi</title>
+    <style>
+        :root {
+            --primary-color: #2c5530;
+            --secondary-color: #8b3232;
+            --accent-color: #4a6d4a;
+            --text-color: #333;
+            --light-bg: rgba(255, 255, 255, 0.9);
+            --nav-hover: #3d7443;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding-top: 60px; /* Espacio para la barra de navegación */
+            padding-bottom: 60px; /* Espacio para el footer */
+            background: linear-gradient(135deg, #d4a5a5 0%, #a5d4a5 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        /* Estilos para la barra de navegación */
+        .nav-container {
+            background-color: var(--primary-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            padding: 15px 0;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: var(--nav-hover);
+        }
+
+        .nav-links a.active {
+            background-color: var(--nav-hover);
+        }
+
+        /* Botón hamburguesa para móvil */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .menu-toggle span {
+            height: 2px;
+            width: 25px;
+            background-color: white;
+            margin: 2px 0;
+            transition: 0.3s;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            padding: 20px;
+            margin: 20px;
+            background: var(--light-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        section {
+            background: var(--light-bg);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin-top: 0;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+
+        form {
+            display: grid;
+            grid-gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 5px rgba(74, 109, 74, 0.3);
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--primary-color);
+        }
+
+        button[type="button"] {
+            background-color: #888;
+        }
+
+        button[type="button"]:hover {
+            background-color: #666;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            left: 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 60px;
+                padding-bottom: 80px;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: var(--primary-color);
+                padding: 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 15px 20px;
+                border-radius: 0;
+                border-bottom: 1px solid var(--nav-hover);
+            }
+
+            section {
+                margin: 10px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            input, button {
+                width: 100%;
+            }
+        }
+    </style>
+    <script defer src="js/wifi.js"></script>
+</head>
+<body>
+<!-- Barra de navegación -->
+<div class="nav-container">
+    <nav class="navbar">
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="active">Principal</a>
+            <a href="register-device.html">Agregar Dispositivo</a>
+            <a href="wifi-devices.html">Dispositivos WiFi</a>
+            <a href="scanners-printers.html">Scanners e Impresoras</a>
+            <a href="search-device.html">Dispositivos Registrados</a>
+        </div>
+    </nav>
+</div>
+
+<h1>Gestión de Equipos WiFi</h1>
+
+<section>
+    <h2>Agregar Equipo WiFi</h2>
+    <form id="addDeviceForm">
+        <label for="dispositivo">Dispositivo:</label>
+        <input type="text" id="dispositivo" name="dispositivo" required>
+
+        <label for="direccion_ip">Dirección IP:</label>
+        <input type="text" id="direccion_ip" name="direccion_ip" required>
+
+        <label for="ubicacion">Ubicación:</label>
+        <input type="text" id="ubicacion" name="ubicacion" required>
+
+        <button type="submit">Agregar Dispositivo</button>
+    </form>
+</section>
+
+<section>
+    <h2>Lista de Equipos WiFi</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Dispositivo</th>
+            <th>Dirección IP</th>
+            <th>Ubicación</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody id="deviceList">
+        <!-- Equipos se renderizan aquí dinámicamente -->
+        </tbody>
+    </table>
+</section>
+
+<section id="updateSection" style="display: none;">
+    <h2>Actualizar Equipo WiFi</h2>
+    <form id="updateDeviceForm">
+        <input type="hidden" id="updateDeviceId">
+
+        <label for="updateDispositivo">Dispositivo:</label>
+        <input type="text" id="updateDispositivo" name="updateDispositivo" required>
+
+        <label for="updateDireccionIp">Dirección IP:</label>
+        <input type="text" id="updateDireccionIp" name="updateDireccionIp" required>
+
+        <label for="updateUbicacion">Ubicación:</label>
+        <input type="text" id="updateUbicacion" name="updateUbicacion" required>
+
+        <div style="display: flex; gap: 10px;">
+            <button type="submit">Actualizar</button>
+            <button type="button" id="cancelUpdate">Cancelar</button>
+        </div>
+    </form>
+</section>
+
+<footer>
+    <p>Alcaldía de Duitama 2025</p>
+</footer>
+
+<script>
+    // Script para el menú móvil
+    document.querySelector('.menu-toggle').addEventListener('click', function() {
+        document.querySelector('.nav-links').classList.toggle('active');
+    });
+</script>
+</body>
+</html>
