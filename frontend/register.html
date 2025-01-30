@@ -1,31 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuarios</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Registro de Usuario</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #4CAF50, #ff6b6b);
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            display: none;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+
+        .success {
+            color: #4CAF50;
+            margin-top: 10px;
+            display: none;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .login-redirect {
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .login-link {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .login-link:hover {
+            color: #45a049;
+            text-decoration: underline;
+        }
+
+        .signup-text {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .form-header-icon {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #4CAF50;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <h1>Registro de Usuarios</h1>
-    <form id="register-form">
-        <label for="username">Nombre de Usuario:</label>
-        <input type="text" id="username" name="username" required>
-
-        <label for="email">Correo Electrónico:</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required>
-
-        <label for="confirm-password">Confirmar Contraseña:</label>
-        <input type="password" id="confirm-password" name="confirm-password" required>
-
-        <button type="submit">Registrarse</button>
+    <div class="form-header-icon">👤</div>
+    <h2>Registro de Usuario</h2>
+    <form id="registroForm">
+        <div class="form-group">
+            <label for="username">Nombre de usuario:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Crear Cuenta</button>
+        <p id="errorMessage" class="error"></p>
+        <p id="successMessage" class="success"></p>
+        <div id="loginRedirect" class="login-redirect">
+            <p>¿Listo para empezar? <a href="/login" class="login-link">Iniciar Sesión</a></p>
+        </div>
     </form>
-    <p>¿Ya tienes una cuenta? <a href="index.html">Inicia sesión aquí</a></p>
+    <p class="signup-text">¿Ya tienes una cuenta? <a href="/index.html" class="login-link">Inicia sesión aquí</a></p>
 </div>
-<script src="js/app.js"></script>
+
+<script>
+    document.getElementById('registroForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const loginRedirect = document.getElementById('loginRedirect');
+
+        // Ocultar mensajes previos
+        errorMessage.style.display = 'none';
+        successMessage.style.display = 'none';
+        loginRedirect.style.display = 'none';
+
+        const userData = {
+            username: document.getElementById('username').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+        };
+
+        try {
+            const response = await fetch('http://localhost:5000/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                successMessage.textContent = '¡Usuario registrado exitosamente!';
+                successMessage.style.display = 'block';
+                loginRedirect.style.display = 'block';
+                document.getElementById('registroForm').reset();
+
+                // Opcional: Redirección automática después de 3 segundos
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 3000);
+            } else {
+                errorMessage.textContent = data.message || 'Error al registrar usuario';
+                errorMessage.style.display = 'block';
+            }
+        } catch (error) {
+            errorMessage.textContent = 'Error de conexión con el servidor';
+            errorMessage.style.display = 'block';
+        }
+    });
+</script>
 </body>
 </html>
