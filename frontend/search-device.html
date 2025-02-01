@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Dispositivos</title>
@@ -18,7 +22,7 @@
             --transition: all 0.3s ease;
         }
 
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(
@@ -31,7 +35,7 @@
                     rgba(0, 143, 57, 0.8) 0%,
                     rgba(206, 17, 38, 0.9) 100%
             );
-           
+
         }
 
         .nav-links {
@@ -440,7 +444,6 @@
                 alert("Error al guardar cambios.");
             }
         };
-
         document.getElementById("generateReport").onclick = async () => {
             try {
                 const response = await fetch(`${apiUrl}/${device._id}/report`);
@@ -460,27 +463,96 @@
         };
 
         document.getElementById("generatePdf").onclick = () => {
-            const {jsPDF} = window.jspdf;
+            const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            let y = 20;
-            doc.setFontSize(16);
-            doc.text("Informe del Dispositivo", 10, y);
-            y += 10;
+            // Verificar si el dispositivo tiene datos
+            if (!device || Object.keys(device).length === 0) {
+                alert("No hay datos disponibles para generar el informe.");
+                return;
+            }
 
+            console.log("Datos del dispositivo:", device); // Depuración
+
+            // Configuración de colores
+            const colors = {
+                primary: [41, 128, 185],    // Azul
+                secondary: [236, 240, 241], // Gris claro
+                text: [44, 62, 80]          // Azul oscuro
+            };
+
+            // Agregar imagen del logo (ajusta la URL o base64 de la imagen)
+            const logoUrl = "logo.png";
+            doc.addImage(logoUrl, "PNG", 10, 10, 30, 30);
+
+            // Título del informe
+            doc.setFontSize(18);
+            doc.setTextColor(...colors.text);
+            doc.setFont("helvetica", "bold");
+            doc.text("Informe Dispositivo Electrónico", 105, 20, { align: "center" });
+            doc.setFontSize(14);
+            doc.text("Alcaldía de Duitama", 105, 28, { align: "center" });
             doc.setFontSize(12);
-            Object.keys(device).forEach(key => {
-                const text = `${key.charAt(0).toUpperCase() + key.slice(1)}: ${device[key]}`;
-                doc.text(text, 10, y);
-                y += 10;
+            doc.text("2025", 105, 35, { align: "center" });
+
+            // Descripción del informe
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.text("En este documento se presenta el informe del dispositivo correspondiente, organizado según sus especificaciones detalladas.", 10, 50, { maxWidth: 190, align: "justify" });
+
+            // Espaciado para la tabla
+            let startY = 65;
+
+            // Datos organizados en dos columnas con fuente más pequeña
+            let xPos = 10;
+            let yPos = startY;
+            const columnWidth = 90;
+
+            Object.entries(device).forEach(([key, value], index) => {
+                if (index % 2 === 0 && index !== 0) {
+                    yPos += 8;
+                    xPos = 10;
+                }
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "bold");
+                doc.text(`${key.charAt(0).toUpperCase() + key.slice(1)}:`, xPos, yPos);
+                doc.setFont("helvetica", "normal");
+                doc.text(value !== undefined && value !== null ? String(value) : "N/A", xPos + 40, yPos);
+                xPos += columnWidth;
             });
 
+            // Espacio para firmas más abajo y ajustadas a los bordes
+            let signatureY = yPos + 40;
+            doc.line(20, signatureY, 80, signatureY); // Línea para firma del supervisor
+            doc.line(120, signatureY, 180, signatureY); // Línea para firma del usuario
+
+            doc.setFont("helvetica", "bold");
+            doc.text("Ronald Rojas", 40, signatureY + 5);
+            doc.text(device.usuario || "Usuario", 140, signatureY + 5);
+            doc.text("Supervisor", 40, signatureY + 10);
+            doc.text("Usuario", 140, signatureY + 10);
+
+            // Fecha de expedición
+            let issueDate = new Date().toLocaleDateString();
+            doc.setFontSize(10);
+            doc.text(`Fecha de expedición: ${issueDate}`, 10, doc.internal.pageSize.height - 10);
+
+            // Pie de página con paginación
+            const pageCount = doc.internal.getNumberOfPages();
+            doc.setFontSize(10);
+            doc.setTextColor(...colors.text);
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.text(`Página ${i} de ${pageCount}`, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 10, { align: "center" });
+            }
+
+            // Guardar el PDF
             doc.save(`DeviceReport_${device._id}.pdf`);
         };
+
+
+
     }
-
-
-
 </script>
 <footer>
     <p>Alcaldía de Duitama 2025</p>
