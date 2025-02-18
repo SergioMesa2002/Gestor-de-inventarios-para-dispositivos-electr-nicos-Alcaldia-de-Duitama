@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtrado de Dispositivos</title>
+    <style>
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+        }
+        #filters {
+            width: 25%;
+            padding: 10px;
+            border-right: 1px solid #ccc;
+        }
+        #devicesTable {
+            width: 75%;
+            padding: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<div id="filters">
+    <h3>Filtros</h3>
+
+    <!-- Filtro por tipo -->
+    <label for="typeFilter">Tipo:</label>
+    <select id="typeFilter">
+        <option value="">Seleccionar tipo</option>
+        <option value="Laptop">Laptop</option>
+        <option value="PC">PC</option>
+        <option value="Tablet">Tablet</option>
+    </select>
+
+    <!-- Filtro por ubicación -->
+    <label for="locationFilter">Ubicación:</label>
+    <select id="locationFilter">
+        <option value="">Seleccionar ubicación</option>
+        <option value="Oficina 1">Oficina 1</option>
+        <option value="Oficina 2">Oficina 2</option>
+        <option value="Bodega">Bodega</option>
+    </select>
+
+    <!-- Filtro por RAM -->
+    <label for="ramFilter">RAM:</label>
+    <select id="ramFilter">
+        <option value="">Seleccionar RAM</option>
+        <option value="4GB">4GB</option>
+        <option value="8GB">8GB</option>
+        <option value="16GB">16GB</option>
+    </select>
+
+    <!-- Filtro por disco duro -->
+    <label for="diskFilter">Disco Duro:</label>
+    <select id="diskFilter">
+        <option value="">Seleccionar Disco Duro</option>
+        <option value="512GB">512GB</option>
+        <option value="1TB">1TB</option>
+        <option value="2TB">2TB</option>
+    </select>
+
+    <!-- Filtro por Office -->
+    <label for="officeFilter">Office:</label>
+    <select id="officeFilter">
+        <option value="">Seleccionar Office</option>
+        <option value="2016">Office 2016</option>
+        <option value="2019">Office 2019</option>
+        <option value="2021">Office 2021</option>
+        <option value="No tiene">No tiene</option>
+    </select>
+
+    <!-- Filtro por marca -->
+    <label for="brandFilter">Marca:</label>
+    <select id="brandFilter">
+        <option value="">Seleccionar marca</option>
+        <option value="HP">HP</option>
+        <option value="Dell">Dell</option>
+        <option value="Lenovo">Lenovo</option>
+        <option value="Asus">Asus</option>
+    </select>
+
+    <!-- Filtro por procesador -->
+    <label for="processorFilter">Procesador:</label>
+    <select id="processorFilter">
+        <option value="">Seleccionar procesador</option>
+        <option value="Intel i5">Intel i5</option>
+        <option value="Intel i7">Intel i7</option>
+        <option value="AMD Ryzen 5">AMD Ryzen 5</option>
+        <option value="AMD Ryzen 7">AMD Ryzen 7</option>
+    </select>
+
+    <button onclick="applyFilters()">Aplicar filtros</button>
+</div>
+
+<div id="devicesTable">
+    <h3>Dispositivos</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Ubicación</th>
+            <th>Tipo</th>
+            <th>RAM</th>
+            <th>Procesador</th>
+            <th>Office</th>
+            <th>Antivirus</th>
+            <th>Disco Duro</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+</div>
+
+<script>
+    const apiUrl = "http://localhost:5000/api/devices";
+
+    async function fetchDevices() {
+        try {
+            const response = await fetch(apiUrl);
+            const devices = await response.json();
+            displayDevices(devices);
+        } catch (error) {
+            console.error("Error al obtener dispositivos:", error);
+        }
+    }
+
+    function displayDevices(devices) {
+        const tableBody = document.getElementById("tableBody");
+        tableBody.innerHTML = "";
+
+        devices.forEach(device => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${device.nombre}</td>
+                <td>${device.ubicacion}</td>
+                <td>${device.tipo}</td>
+                <td>${device.memoriaRam}</td>
+                <td>${device.procesador}</td>
+                <td>${device.softOfimatico}</td>
+                <td>${device.antivirus}</td>
+                <td>${device.discoDuro}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function applyFilters() {
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(devices => {
+                const typeFilter = document.getElementById("typeFilter").value.toLowerCase();
+                const locationFilter = document.getElementById("locationFilter").value.toLowerCase();
+                const ramFilter = document.getElementById("ramFilter").value.toLowerCase();
+                const diskFilter = document.getElementById("diskFilter").value.toLowerCase();
+                const officeFilter = document.getElementById("officeFilter").value.toLowerCase();
+                const brandFilter = document.getElementById("brandFilter").value.toLowerCase();
+                const processorFilter = document.getElementById("processorFilter").value.toLowerCase();
+
+                const filteredDevices = devices.filter(device => {
+                    return (!typeFilter || device.tipo.toLowerCase().includes(typeFilter)) &&
+                        (!locationFilter || device.ubicacion.toLowerCase().includes(locationFilter)) &&
+                        (!ramFilter || device.memoriaRam.toLowerCase().includes(ramFilter)) &&
+                        (!diskFilter || device.discoDuro.toLowerCase().includes(diskFilter)) &&
+                        (!officeFilter || device.softOfimatico.toLowerCase().includes(officeFilter)) &&
+                        (!brandFilter || device.marca.toLowerCase().includes(brandFilter)) &&
+                        (!processorFilter || device.procesador.toLowerCase().includes(processorFilter));
+                });
+
+                displayDevices(filteredDevices);
+            });
+    }
+
+    fetchDevices();
+</script>
+
+</body>
+</html>
