@@ -1,9 +1,10 @@
 {
   "name": "gestor-de-inventarios-alcaldia-de-duitama",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
@@ -19,12 +20,15 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.12.0",
-    "mongoose": "^8.9.4",
+    "mongoose": "8.9.5",
     "mongoose-sequence": "^6.0.1",
     "morgan": "^1.10.0",
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.16.0",
     "pdfmake": "^0.2.18",
     "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
   }
 }
