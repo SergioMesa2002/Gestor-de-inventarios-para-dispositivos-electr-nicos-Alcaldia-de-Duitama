@@ -14,7 +14,6 @@
             box-sizing: border-box;
         }
 
-        /* Navigation Styles */
         .nav-links {
             background-color: rgba(255, 255, 255, 0.9);
             padding: 15px;
@@ -44,27 +43,46 @@
             color: white;
         }
 
-        /* Content Wrapper */
-        .content-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: calc(100vh - 100px);
-        }
-
-        main {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            padding: 30px;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        header {
-            text-align: center;
-            color: #333;
+        .device-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             margin-bottom: 20px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+
+        .device-card h3 {
+            color: #D32F2F;
+            margin-bottom: 10px;
+        }
+
+        .device-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .device-table th, .device-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .device-table th {
+            background-color: #8BC34A;
+            color: white;
+        }
+
+        .device-table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .content-wrapper {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 20px;
         }
 
         .form-group {
@@ -72,63 +90,36 @@
         }
 
         label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
             font-weight: bold;
+            display: block;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #8BC34A;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            box-sizing: border-box;
         }
 
         .btn {
-            width: 100%;
-            padding: 12px;
-            background-color: #D32F2F;
+            background-color: #8BC34A;
             color: white;
+            padding: 10px 15px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-size: 16px;
         }
 
         .btn:hover {
-            background-color: #B71C1C;
+            background-color: #6D9C36;
         }
 
-        footer {
-            background-color: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 15px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            left: 0;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        footer p {
-            margin: 0;
-            font-size: 16px;
-            letter-spacing: 1px;
-        }
-
-        /* Responsive Navigation */
-        @media (max-width: 768px) {
-            .nav-links a {
-                display: block;
-                margin: 5px 0;
-            }
-        }
     </style>
 </head>
 <body>
+
 <div class="nav-links">
     <a href="dashboard.html" class="active">Principal</a>
     <a href="register-device.html">Agregar Dispositivo</a>
@@ -136,6 +127,8 @@
     <a href="scanners-printers.html">Scanners e Impresoras</a>
     <a href="search-device.html">Dispositivos Registrados</a>
 </div>
+
+<div id="device-container"></div>
 
 <div class="content-wrapper">
     <main>
@@ -251,6 +244,60 @@
 
 <script src="js/register-device.js"></script>
 
+<script>
+    const apiUrl = "http://localhost:5000/api/devices";
+
+    async function fetchDevices() {
+        try {
+            const response = await fetch(apiUrl);
+            const devices = await response.json();
+            displayDevices(devices);
+        } catch (error) {
+            console.error("Error al obtener dispositivos:", error);
+        }
+    }
+
+    function displayDevices(devices) {
+        const deviceContainer = document.getElementById("device-container");
+        deviceContainer.innerHTML = "";
+
+        const groupedDevices = {};
+        devices.forEach(device => {
+            if (!groupedDevices[device.ubicacion]) {
+                groupedDevices[device.ubicacion] = [];
+            }
+            groupedDevices[device.ubicacion].push(device);
+        });
+
+        Object.keys(groupedDevices).forEach(ubicacion => {
+            const devicesList = groupedDevices[ubicacion];
+            const card = document.createElement("div");
+            card.classList.add("device-card");
+
+            let tableRows = devicesList.map(device => `
+                <tr>
+                    <td>${device.nombre}</td>
+                    <td>${device.tipo}</td>
+                    <td>${device.ipv4}</td>
+                    <td>${device.ubicacion}</td>
+
+                </tr>
+            `).join("");
+
+            card.innerHTML = `
+                <h3>${ubicacion} (${devicesList.length} dispositivos)</h3>
+                <table class="device-table">
+                    <thead><tr><th>Nombre</th><th>Tipo</th><th>IPv4</th><th>ubicacion</th></tr></thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
+            `;
+
+            deviceContainer.appendChild(card);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", fetchDevices);
+</script>
 
 </body>
 </html>

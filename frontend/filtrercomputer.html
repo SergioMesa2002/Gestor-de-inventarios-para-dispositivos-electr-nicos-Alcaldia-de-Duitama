@@ -1,31 +1,154 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Filtrado de Dispositivos</title>
     <style>
+        :root {
+            --primary-color: #fff159;
+            --secondary-color: #3483fa;
+            --text-color: #333;
+            --border-color: #ddd;
+            --background-gray: #ededed;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             display: flex;
-            font-family: Arial, sans-serif;
+            font-family: 'Proxima Nova', -apple-system, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+            background-color: var(--background-gray);
+            color: var(--text-color);
         }
+
         #filters {
             width: 25%;
-            padding: 10px;
-            border-right: 1px solid #ccc;
+            padding: 16px;
+            background: white;
+            border-radius: 4px;
+            margin: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            height: fit-content;
         }
+
         #devicesTable {
             width: 75%;
-            padding: 10px;
+            padding: 16px;
+            margin: 16px 16px 16px 0;
         }
+
+        h3 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        h4 {
+            color: #666;
+            font-size: 14px;
+            margin: 16px 0 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        #filters div {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+
+        th {
+            background-color: #fff;
+            color: #666;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 13px;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: #333;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2968c8;
+        }
+
+        #devicesTable button {
+            width: auto;
+            margin-top: 16px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .filter-section {
+            background: white;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            #filters, #devicesTable {
+                width: 100%;
+                margin: 16px;
+            }
         }
     </style>
 </head>
@@ -33,71 +156,76 @@
 <div id="filters">
     <h3>Filtros</h3>
 
-    <!-- Filtro por tipo -->
-    <label for="typeFilter">Tipo:</label>
-    <select id="typeFilter">
-        <option value="">Seleccionar tipo</option>
-        <option value="Laptop">Laptop</option>
-        <option value="PC">PC</option>
-        <option value="Tablet">Tablet</option>
-    </select>
+    <div class="filter-group">
+        <h4>Tipo de dispositivo</h4>
+        <div>
+            <label><input type="checkbox" name="typeFilter" value="Laptop"> Laptop</label>
+            <label><input type="checkbox" name="typeFilter" value="PC"> PC</label>
+            <label><input type="checkbox" name="typeFilter" value="Tablet"> Tablet</label>
+        </div>
+    </div>
 
-    <!-- Filtro por ubicación -->
-    <label for="locationFilter">Ubicación:</label>
-    <select id="locationFilter">
-        <option value="">Seleccionar ubicación</option>
-        <option value="Oficina 1">Oficina 1</option>
-        <option value="Oficina 2">Oficina 2</option>
-        <option value="Bodega">Bodega</option>
-    </select>
+    <div class="filter-group">
+        <h4>Ubicación</h4>
+        <div>
+            <label><input type="checkbox" name="locationFilter" value="Oficina 1"> Oficina 1</label>
+            <label><input type="checkbox" name="locationFilter" value="Oficina 2"> Oficina 2</label>
+            <label><input type="checkbox" name="locationFilter" value="Bodega"> Bodega</label>
+        </div>
+    </div>
 
-    <!-- Filtro por RAM -->
-    <label for="ramFilter">RAM:</label>
-    <select id="ramFilter">
-        <option value="">Seleccionar RAM</option>
-        <option value="4GB">4GB</option>
-        <option value="8GB">8GB</option>
-        <option value="16GB">16GB</option>
-    </select>
+    <div class="filter-group">
+        <h4>Memoria RAM</h4>
+        <div>
+            <label><input type="checkbox" name="ramFilter" value="4GB"> 4GB</label>
+            <label><input type="checkbox" name="ramFilter" value="8GB"> 8GB</label>
+            <label><input type="checkbox" name="ramFilter" value="12GB"> 12GB</label>
+            <label><input type="checkbox" name="ramFilter" value="16GB"> 16GB</label>
+        </div>
+    </div>
 
-    <!-- Filtro por disco duro -->
-    <label for="diskFilter">Disco Duro:</label>
-    <select id="diskFilter">
-        <option value="">Seleccionar Disco Duro</option>
-        <option value="512GB">512GB</option>
-        <option value="1TB">1TB</option>
-        <option value="2TB">2TB</option>
-    </select>
+    <div class="filter-group">
+        <h4>Almacenamiento (GB)</h4>
+        <div>
+            <label><input type="checkbox" name="diskFilter" data-min="0" data-max="127"> 0 - 127GB</label>
+            <label><input type="checkbox" name="diskFilter" data-min="128" data-max="255"> 128 - 255GB</label>
+            <label><input type="checkbox" name="diskFilter" data-min="256" data-max="511"> 256 - 511GB</label>
+            <label><input type="checkbox" name="diskFilter" data-min="512" data-max="999"> 512GB - 999GB</label>
+        </div>
+    </div>
 
-    <!-- Filtro por Office -->
-    <label for="officeFilter">Office:</label>
-    <select id="officeFilter">
-        <option value="">Seleccionar Office</option>
-        <option value="2016">Office 2016</option>
-        <option value="2019">Office 2019</option>
-        <option value="2021">Office 2021</option>
-        <option value="No tiene">No tiene</option>
-    </select>
+    <div class="filter-group">
+        <h4>Software de Office</h4>
+        <div>
+            <label><input type="checkbox" name="officeFilter" value="2016"> Office 2016</label>
+            <label><input type="checkbox" name="officeFilter" value="2019"> Office 2019</label>
+            <label><input type="checkbox" name="officeFilter" value="2021"> Office 2021</label>
+            <label><input type="checkbox" name="officeFilter" value="No tiene"> No tiene</label>
+        </div>
+    </div>
 
-    <!-- Filtro por marca -->
-    <label for="brandFilter">Marca:</label>
-    <select id="brandFilter">
-        <option value="">Seleccionar marca</option>
-        <option value="HP">HP</option>
-        <option value="Dell">Dell</option>
-        <option value="Lenovo">Lenovo</option>
-        <option value="Asus">Asus</option>
-    </select>
+    <div class="filter-group">
+        <h4>Marca</h4>
+        <div>
+            <label><input type="checkbox" name="brandFilter" value="HP"> HP</label>
+            <label><input type="checkbox" name="brandFilter" value="Dell"> Dell</label>
+            <label><input type="checkbox" name="brandFilter" value="Lenovo"> Lenovo</label>
+            <label><input type="checkbox" name="brandFilter" value="Asus"> Asus</label>
+        </div>
+    </div>
 
-    <!-- Filtro por procesador -->
-    <label for="processorFilter">Procesador:</label>
-    <select id="processorFilter">
-        <option value="">Seleccionar procesador</option>
-        <option value="Intel i5">Intel i5</option>
-        <option value="Intel i7">Intel i7</option>
-        <option value="AMD Ryzen 5">AMD Ryzen 5</option>
-        <option value="AMD Ryzen 7">AMD Ryzen 7</option>
-    </select>
+    <div class="filter-group">
+        <div class="filter-group">
+            <h4>Procesador (GHz)</h4>
+            <div>
+                <label><input type="checkbox" name="processorFilter" data-min="2.0" data-max="2.4"> 2.0 - 2.4</label>
+                <label><input type="checkbox" name="processorFilter" data-min="2.5" data-max="2.9"> 2.5 - 2.9</label>
+                <label><input type="checkbox" name="processorFilter" data-min="3.0" data-max="3.4"> 3.0 - 3.4</label>
+                <label><input type="checkbox" name="processorFilter" data-min="3.5" data-max="4.0"> 3.5 - 4.0</label>
+            </div>
+        </div>
+
+    </div>
 
     <button onclick="applyFilters()">Aplicar filtros</button>
 </div>
@@ -119,9 +247,11 @@
         </thead>
         <tbody id="tableBody"></tbody>
     </table>
+    <button onclick="generatePDF()">Exportar a PDF</button>
 </div>
 
 <script>
+    // El código JavaScript se mantiene exactamente igual que en el original
     const apiUrl = "http://localhost:5000/api/devices";
 
     async function fetchDevices() {
@@ -154,31 +284,100 @@
         });
     }
 
+    function generatePDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.text("Informe de Dispositivos Filtrados", 20, 20);
+
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "normal");
+        doc.text("Estos son los dispositivos solicitados según los requerimientos especificados.", 20, 30);
+
+        let filtersApplied = "Filtros aplicados: \n";
+        const filterGroups = document.querySelectorAll("#filters h4");
+        filterGroups.forEach(group => {
+            const filterTitle = group.innerText;
+            const checkedOptions = Array.from(group.nextElementSibling.querySelectorAll("input:checked"))
+                .map(input => input.value);
+            if (checkedOptions.length > 0) {
+                filtersApplied += `${filterTitle}: ${checkedOptions.join(", ")}\n`;
+            }
+        });
+
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(10);
+        doc.text(filtersApplied, 20, 40);
+
+        const tableBody = document.getElementById("tableBody");
+        const rows = tableBody.querySelectorAll("tr");
+
+        let y = 70;
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("Nombre", 20, y);
+        doc.text("Ubicación", 100, y);
+
+        doc.setFont("helvetica", "normal");
+
+        rows.forEach(row => {
+            const cols = row.querySelectorAll("td");
+            if (cols.length > 1) {
+                y += 10;
+                doc.text(cols[0].innerText, 20, y);
+                doc.text(cols[1].innerText, 100, y);
+            }
+        });
+
+        doc.save("dispositivos_filtrados.pdf");
+    }
+
     function applyFilters() {
         fetch(apiUrl)
             .then(response => response.json())
             .then(devices => {
-                const typeFilter = document.getElementById("typeFilter").value.toLowerCase();
-                const locationFilter = document.getElementById("locationFilter").value.toLowerCase();
-                const ramFilter = document.getElementById("ramFilter").value.toLowerCase();
-                const diskFilter = document.getElementById("diskFilter").value.toLowerCase();
-                const officeFilter = document.getElementById("officeFilter").value.toLowerCase();
-                const brandFilter = document.getElementById("brandFilter").value.toLowerCase();
-                const processorFilter = document.getElementById("processorFilter").value.toLowerCase();
+                function getCheckedValues(name) {
+                    return [...document.querySelectorAll(`input[name="${name}"]:checked`)]
+                        .map(input => input.value.toLowerCase());
+                }
+
+                function getCheckedRanges(name) {
+                    return [...document.querySelectorAll(`input[name="${name}"]:checked`)]
+                        .map(input => ({
+                            min: parseFloat(input.getAttribute("data-min")),
+                            max: parseFloat(input.getAttribute("data-max"))
+                        }));
+                }
+
+                const typeFilter = getCheckedValues("typeFilter");
+                const locationFilter = getCheckedValues("locationFilter");
+                const ramFilter = getCheckedValues("ramFilter");
+                const diskRanges = getCheckedRanges("diskFilter");
+                const officeFilter = getCheckedValues("officeFilter");
+                const brandFilter = getCheckedValues("brandFilter");
+                const processorRanges = getCheckedRanges("processorFilter"); // Corregido
 
                 const filteredDevices = devices.filter(device => {
-                    return (!typeFilter || device.tipo.toLowerCase().includes(typeFilter)) &&
-                        (!locationFilter || device.ubicacion.toLowerCase().includes(locationFilter)) &&
-                        (!ramFilter || device.memoriaRam.toLowerCase().includes(ramFilter)) &&
-                        (!diskFilter || device.discoDuro.toLowerCase().includes(diskFilter)) &&
-                        (!officeFilter || device.softOfimatico.toLowerCase().includes(officeFilter)) &&
-                        (!brandFilter || device.marca.toLowerCase().includes(brandFilter)) &&
-                        (!processorFilter || device.procesador.toLowerCase().includes(processorFilter));
+                    const deviceDiskSize = parseInt(device.discoDuro.replace(/\D/g, ""));
+                    const deviceProcessorSpeed = parseFloat(device.procesador.replace(/[^\d.]/g, "")); // Extrae la velocidad
+
+                    return (typeFilter.length === 0 || typeFilter.includes(device.tipo.toLowerCase())) &&
+                        (locationFilter.length === 0 || locationFilter.includes(device.ubicacion.toLowerCase())) &&
+                        (ramFilter.length === 0 || ramFilter.includes(device.memoriaRam.toLowerCase())) &&
+                        (diskRanges.length === 0 || diskRanges.some(range => deviceDiskSize >= range.min && deviceDiskSize <= range.max)) &&
+                        (officeFilter.length === 0 || officeFilter.includes(device.softOfimatico.toLowerCase())) &&
+                        (brandFilter.length === 0 || brandFilter.includes(device.marca.toLowerCase())) &&
+                        (processorRanges.length === 0 || processorRanges.some(range => deviceProcessorSpeed >= range.min && deviceProcessorSpeed <= range.max)); // Ahora filtra por procesador
                 });
 
                 displayDevices(filteredDevices);
-            });
+            })
+            .catch(error => console.error("Error al filtrar dispositivos:", error));
     }
+
 
     fetchDevices();
 </script>

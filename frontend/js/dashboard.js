@@ -14,3 +14,7 @@ document.getElementById('scanners-printers').addEventListener('click', () => {
 document.getElementById('wifi-devices').addEventListener('click', () => {
     window.location.href = '/wifi-devices.html';
 });
+
+document.getElementById('filtrercomputer').addEventListener('click', () => {
+    window.location.href = '/filtrercomputer.html';
+});
