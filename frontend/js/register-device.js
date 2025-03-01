@@ -1,4 +1,5 @@
-const backendUrl = 'http://localhost:5000/api/devices';
+const backendUrl = 'https://gestor-de-inventarios-para-dispositivos.onrender.com/api/devices';
+
 
 document.getElementById('register-device-form').addEventListener('submit', async (e) => {
     e.preventDefault();

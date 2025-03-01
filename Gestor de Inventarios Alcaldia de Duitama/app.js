@@ -31,7 +31,15 @@ const connectDB = async () => {
 connectDB();
 
 // Middlewares globales
-app.use(cors()); // Habilitar CORS para todos los orígenes
+const corsOptions = {
+    origin: ["http://localhost:3000", "https://gestor-de-inventarios-para-dispositivos.onrender.com"], // Permitir frontend local y en Render
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+};
+
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json()); // Parseo de JSON en solicitudes
 app.use(express.urlencoded({ extended: true })); // Parseo de datos de formularios
 app.use(helmet()); // Mejoras de seguridad con Helmet

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const baseUrl = "http://localhost:5000/api/wifi-devices"; // Ajustar si el backend está en otro puerto o ruta
+    const baseUrl = "https://gestor-de-inventarios-para-dispositivos.onrender.com/api/wifi-devices"; // Ajustar si el backend está en otro puerto o ruta
 
     // Referencias a elementos del DOM
     const addDeviceForm = document.getElementById("addDeviceForm");

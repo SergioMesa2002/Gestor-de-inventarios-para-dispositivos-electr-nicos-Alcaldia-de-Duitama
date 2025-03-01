@@ -1,4 +1,4 @@
-const backendUrl = 'http://localhost:5000/api/departments';
+const backendUrl = 'https://gestor-de-inventarios-para-dispositivos.onrender.com/api/departments';
 const form = document.getElementById('department-form');
 const departmentsContainer = document.getElementById('departments-container');
 
