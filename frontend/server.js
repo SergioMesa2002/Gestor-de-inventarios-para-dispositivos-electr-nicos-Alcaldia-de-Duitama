@@ -2,12 +2,12 @@ const express = require('express');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Render asigna un puerto automáticamente
 
-// Middleware para servir archivos estáticos
-app.use(express.static(path.join(__dirname)));
+// Middleware para servir archivos estáticos desde la raíz
+app.use(express.static(__dirname));
 
-// Ruta principal para el inicio de sesión
+// Ruta principal
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -27,7 +27,7 @@ app.get('/departments', (req, res) => {
     res.sendFile(path.join(__dirname, 'departments.html'));
 });
 
-// Inicio del servidor
+// Iniciar el servidor
 app.listen(PORT, () => {
-    console.log(`Servidor frontend ejecutándose en http://localhost:${PORT}`);
+    console.log(`Servidor frontend ejecutándose en el puerto ${PORT}`);
 });

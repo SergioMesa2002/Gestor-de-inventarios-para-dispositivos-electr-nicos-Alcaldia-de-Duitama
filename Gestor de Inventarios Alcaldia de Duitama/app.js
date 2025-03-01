@@ -30,13 +30,17 @@ const connectDB = async () => {
 };
 connectDB();
 
-// Middlewares globales
 const corsOptions = {
-    origin: ["http://localhost:3000", "https://gestor-de-inventarios-para-dispositivos.onrender.com"], // Permitir frontend local y en Render
+    origin: [
+        "http://localhost:3000",
+        "https://gestor-de-inventarios-para-dispositivos.onrender.com",
+        "https://gestor-de-inventarios-para-dispositivos-k0nh.onrender.com" // Agregar el frontend en Render
+    ],
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
 };
+
 
 app.use(cors(corsOptions));
 
