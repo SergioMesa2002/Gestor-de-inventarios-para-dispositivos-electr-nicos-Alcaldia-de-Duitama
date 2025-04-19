@@ -159,20 +159,18 @@
     <div class="filter-group">
         <h4>Tipo de dispositivo</h4>
         <div>
-            <label><input type="checkbox" name="typeFilter" value="Laptop"> Laptop</label>
-            <label><input type="checkbox" name="typeFilter" value="PC"> PC</label>
-            <label><input type="checkbox" name="typeFilter" value="Tablet"> Tablet</label>
+            <label><input type="checkbox" name="typeFilter" value="AllInOne"> AllInOne</label>
+            <label><input type="checkbox" name="typeFilter" value="Desktop"> Desktop</label>
+            <label><input type="checkbox" name="typeFilter" value="Portátil"> Portátil</label>
         </div>
     </div>
 
+
     <div class="filter-group">
         <h4>Ubicación</h4>
-        <div>
-            <label><input type="checkbox" name="locationFilter" value="Oficina 1"> Oficina 1</label>
-            <label><input type="checkbox" name="locationFilter" value="Oficina 2"> Oficina 2</label>
-            <label><input type="checkbox" name="locationFilter" value="Bodega"> Bodega</label>
-        </div>
+        <input type="text" id="locationInput" placeholder="Escribe una ubicación...">
     </div>
+
 
     <div class="filter-group">
         <h4>Memoria RAM</h4>
@@ -197,8 +195,10 @@
     <div class="filter-group">
         <h4>Software de Office</h4>
         <div>
+            <label><input type="checkbox" name="officeFilter" value="2007"> Office 2007</label>
+            <label><input type="checkbox" name="officeFilter" value="2010"> Office 2010</label>
+            <label><input type="checkbox" name="officeFilter" value="2013"> Office 2013</label>
             <label><input type="checkbox" name="officeFilter" value="2016"> Office 2016</label>
-            <label><input type="checkbox" name="officeFilter" value="2019"> Office 2019</label>
             <label><input type="checkbox" name="officeFilter" value="2021"> Office 2021</label>
             <label><input type="checkbox" name="officeFilter" value="No tiene"> No tiene</label>
         </div>
@@ -353,24 +353,29 @@
                 }
 
                 const typeFilter = getCheckedValues("typeFilter");
-                const locationFilter = getCheckedValues("locationFilter");
                 const ramFilter = getCheckedValues("ramFilter");
                 const diskRanges = getCheckedRanges("diskFilter");
                 const officeFilter = getCheckedValues("officeFilter");
                 const brandFilter = getCheckedValues("brandFilter");
-                const processorRanges = getCheckedRanges("processorFilter"); // Corregido
+                const processorRanges = getCheckedRanges("processorFilter");
+
+                const locationInputValue = document.getElementById("locationInput").value.trim().toLowerCase();
 
                 const filteredDevices = devices.filter(device => {
                     const deviceDiskSize = parseInt(device.discoDuro.replace(/\D/g, ""));
-                    const deviceProcessorSpeed = parseFloat(device.procesador.replace(/[^\d.]/g, "")); // Extrae la velocidad
+                    const deviceProcessorSpeed = parseFloat(device.procesador.replace(/[^\d.]/g, ""));
+                    const deviceType = device.tipo.toLowerCase();
+                    const deviceLocation = device.ubicacion.toLowerCase();
 
-                    return (typeFilter.length === 0 || typeFilter.includes(device.tipo.toLowerCase())) &&
-                        (locationFilter.length === 0 || locationFilter.includes(device.ubicacion.toLowerCase())) &&
-                        (ramFilter.length === 0 || ramFilter.includes(device.memoriaRam.toLowerCase())) &&
-                        (diskRanges.length === 0 || diskRanges.some(range => deviceDiskSize >= range.min && deviceDiskSize <= range.max)) &&
-                        (officeFilter.length === 0 || officeFilter.includes(device.softOfimatico.toLowerCase())) &&
-                        (brandFilter.length === 0 || brandFilter.includes(device.marca.toLowerCase())) &&
-                        (processorRanges.length === 0 || processorRanges.some(range => deviceProcessorSpeed >= range.min && deviceProcessorSpeed <= range.max)); // Ahora filtra por procesador
+                    const typeMatch = (typeFilter.length === 0 || typeFilter.includes(deviceType));
+                    const locationMatch = (locationInputValue === "" || deviceLocation.includes(locationInputValue));
+                    const ramMatch = (ramFilter.length === 0 || ramFilter.includes(device.memoriaRam.toLowerCase()));
+                    const diskMatch = (diskRanges.length === 0 || diskRanges.some(range => deviceDiskSize >= range.min && deviceDiskSize <= range.max));
+                    const officeMatch = (officeFilter.length === 0 || officeFilter.includes(device.softOfimatico.toLowerCase()));
+                    const brandMatch = (brandFilter.length === 0 || brandFilter.includes(device.marca.toLowerCase()));
+                    const processorMatch = (processorRanges.length === 0 || processorRanges.some(range => deviceProcessorSpeed >= range.min && deviceProcessorSpeed <= range.max));
+
+                    return typeMatch && locationMatch && ramMatch && diskMatch && officeMatch && brandMatch && processorMatch;
                 });
 
                 displayDevices(filteredDevices);
@@ -378,9 +383,17 @@
             .catch(error => console.error("Error al filtrar dispositivos:", error));
     }
 
-
-    fetchDevices();
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById("locationInput").addEventListener("input", applyFilters);
+
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => cb.addEventListener("change", applyFilters));
+    });
+</script>
+
 
 </body>
 </html>
