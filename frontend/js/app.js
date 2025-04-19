@@ -1,4 +1,4 @@
-const backendUrl = 'https://gestor-de-inventarios-para-dispositivos.onrender.com¿¿¿/api/users'; // Ruta base del backend
+const backendUrl = 'https://gestor-de-inventarios-para-dispositivos.onrender.com/api/users'; // Ruta base del backend
 
 document.getElementById('login-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
